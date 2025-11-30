@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elf Pen-Pal - Write Letters to Your North Pole Friend! 🎄</title>
+    <meta name="description" content="Connect your child with their magical elf pen-pal from the North Pole! Exchange letters, videos, and create Christmas memories that last forever.">
+    <meta name="keywords" content="elf pen-pal, north pole, christmas, santa, kids letters, elf on the shelf, christmas magic">
+    <meta property="og:title" content="Elf Pen-Pal - Magical Letters from the North Pole">
+    <meta property="og:description" content="Your child's magical elf friend awaits! Exchange letters, earn certificates, and keep the Christmas spirit alive all year.">
+    <meta property="og:image" content="/og-image.jpg">
+    <meta property="og:type" content="website">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .christmas-font {
+            font-family: 'Mountains of Christmas', cursive;
+        }
+        
+        .snow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: white;
+            font-size: 1em;
+            opacity: 0.8;
+            animation: fall linear infinite;
+            text-shadow: 0 0 5px rgba(255,255,255,0.5);
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+        
+        .gradient-christmas {
+            background: linear-gradient(135deg, #c41e3a 0%, #165B33 50%, #c41e3a 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .letter-paper {
+            background: linear-gradient(to bottom, #ffffff 0%, #f9f9f9 100%);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .letter-paper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50px;
+            width: 2px;
+            height: 100%;
+            background: #ffc0cb;
+            opacity: 0.3;
+        }
+        
+        .elf-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(196, 30, 58, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(196, 30, 58, 0.8);
+            }
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-red-50 via-white to-green-50 min-h-screen">
+    <!-- Snow Effect -->
+    <div class="snow" id="snow"></div>
+    
+    <!-- Landing Page -->
+    <div id="landingPage" class="relative z-10">
+        <!-- Header with Auth Buttons -->
+        <header class="bg-white/90 backdrop-blur-sm shadow-lg sticky top-0 z-50">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-4xl">🎄</span>
+                        <h1 class="text-3xl font-bold christmas-font text-red-600">Elf Pen-Pal</h1>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <!-- Parent Buttons -->
+                        <div class="flex items-center space-x-2 border-r pr-4">
+                            <span class="text-sm text-gray-600 hidden md:block">Parent:</span>
+                            <button onclick="showAuthModal('parent', 'login')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition">Login</button>
+                            <button onclick="showAuthModal('parent', 'register')" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold transition">Register</button>
+                        </div>
+                        
+                        <!-- Kid Buttons -->
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-600 hidden md:block">Kid:</span>
+                            <button onclick="showAuthModal('kid', 'login')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition">Login</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Hero Section - Write to Santa First -->
+        <section class="container mx-auto px-4 py-16">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-8">
+                    <h2 class="text-6xl font-bold christmas-font text-red-600 mb-4 drop-shadow-lg">
+                        ✨ Write to Your Elf Friend at the North Pole! ✨
+                    </h2>
+                    <p class="text-2xl text-gray-700">
+                        The elves are waiting to be your pen-pal! 🧝‍♀️🧝‍♂️
+                    </p>
+                </div>
+                
+                <!-- Letter Writing Interface -->
+                <div class="letter-paper max-w-3xl mx-auto p-8 rounded-lg mb-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-5xl">🧝‍♀️</div>
+                            <div>
+                                <p class="font-bold text-lg text-red-600">To: The Elves at the North Pole</p>
+                                <p class="text-sm text-gray-600">The North Pole Workshop</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-600">Date: {TODAY}</p>
+                            <p class="text-sm text-gray-600">❄️ North Pole Mail ❄️</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Your Name:</label>
+                        <input type="text" id="guestName" placeholder="Enter your name..." class="w-full border-2 border-red-200 rounded-lg p-3 text-lg focus:border-red-500 focus:outline-none">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Your Letter:</label>
+                        <textarea id="guestLetter" rows="12" placeholder="Dear Elves,&#10;&#10;My name is ____ and I am ____ years old.&#10;&#10;I can't wait to meet my elf pen-pal! Here are some things about me...&#10;&#10;My favorite things are...&#10;&#10;I love Christmas because...&#10;&#10;Love," class="w-full border-2 border-red-200 rounded-lg p-4 text-lg focus:border-red-500 focus:outline-none resize-none"></textarea>
+                    </div>
+                    
+                    <div class="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4 mb-6">
+                        <p class="text-sm text-gray-700 text-center">
+                            <span class="text-2xl mr-2">✉️</span>
+                            <strong>Want Santa & an elf to write back?</strong><br>
+                            Parents can create an account to get replies, videos, and more magic!
+                        </p>
+                    </div>
+                    
+                    <button onclick="sendGuestLetter()" class="w-full bg-gradient-to-r from-red-600 to-green-600 hover:from-red-700 hover:to-green-700 text-white text-2xl px-8 py-5 rounded-full font-bold shadow-2xl pulse-glow transition transform hover:scale-105">
+                        📮 Send Letter to the North Pole! 📮
+                    </button>
+                </div>
+                
+                <!-- Quick Info Cards -->
+                <div class="grid md:grid-cols-3 gap-6 mt-12">
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover">
+                        <div class="text-5xl mb-3">🧝‍♀️</div>
+                        <h3 class="text-xl font-bold text-red-600 mb-2">Choose Your Elf Friend</h3>
+                        <p class="text-gray-700 text-sm">Pick from 20 magical elves!</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover">
+                        <div class="text-5xl mb-3">💌</div>
+                        <h3 class="text-xl font-bold text-red-600 mb-2">Get Replies Back</h3>
+                        <p class="text-gray-700 text-sm">Your elf writes back to you!</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover">
+                        <div class="text-5xl mb-3">🎥</div>
+                        <h3 class="text-xl font-bold text-red-600 mb-2">Watch Elf Videos</h3>
+                        <p class="text-gray-700 text-sm">See the North Pole workshop!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Features Section -->
+        <section class="container mx-auto px-4 py-16">
+            <h3 class="text-4xl font-bold christmas-font text-center text-green-700 mb-12">Magical Features ✨</h3>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover text-center">
+                    <div class="text-6xl mb-4">✉️</div>
+                    <h4 class="text-2xl font-bold text-red-600 mb-3">Write Letters</h4>
+                    <p class="text-gray-700">Exchange magical letters with your elf friend all year round!</p>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover text-center">
+                    <div class="text-6xl mb-4">🎥</div>
+                    <h4 class="text-2xl font-bold text-red-600 mb-3">Elf Videos</h4>
+                    <p class="text-gray-700">Receive special video messages from your elf at the North Pole!</p>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover text-center">
+                    <div class="text-6xl mb-4">🏆</div>
+                    <h4 class="text-2xl font-bold text-red-600 mb-3">Certificates</h4>
+                    <p class="text-gray-700">Earn special certificates from Santa and your elf friend!</p>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover text-center">
+                    <div class="text-6xl mb-4">🎮</div>
+                    <h4 class="text-2xl font-bold text-red-600 mb-3">Fun Games</h4>
+                    <p class="text-gray-700">Play Christmas games like Spot the Elf and North Pole puzzles!</p>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover text-center">
+                    <div class="text-6xl mb-4">⏰</div>
+                    <h4 class="text-2xl font-bold text-red-600 mb-3">Christmas Countdown</h4>
+                    <p class="text-gray-700">Count down the days until Christmas with your elf!</p>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover text-center">
+                    <div class="text-6xl mb-4">💝</div>
+                    <h4 class="text-2xl font-bold text-red-600 mb-3">Share the Magic</h4>
+                    <p class="text-gray-700">Share your magical moments on social media!</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Auth Modal -->
+    <div id="authModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            
+            <div id="authContent">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Kid Dashboard -->
+    <div id="kidDashboard" class="hidden relative z-10">
+        <!-- Dashboard Header -->
+        <header class="bg-gradient-christmas text-white shadow-lg sticky top-0 z-50">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-4xl">🧝</span>
+                        <div>
+                            <h1 class="text-2xl font-bold christmas-font">My Elf Friend</h1>
+                            <p class="text-sm opacity-90" id="kidWelcome">Welcome back!</p>
+                        </div>
+                    </div>
+                    
+                    <button onclick="logout()" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Dashboard Navigation -->
+        <nav class="bg-white shadow-md sticky top-20 z-40">
+            <div class="container mx-auto px-4">
+                <div class="flex space-x-2 overflow-x-auto">
+                    <button onclick="showKidTab('write')" class="kid-tab px-6 py-3 font-semibold text-red-600 border-b-4 border-red-600 whitespace-nowrap">✉️ Write Letter</button>
+                    <button onclick="showKidTab('videos')" class="kid-tab px-6 py-3 font-semibold text-gray-600 hover:text-red-600 border-b-4 border-transparent hover:border-red-200 whitespace-nowrap">🎥 Videos</button>
+                    <button onclick="showKidTab('certificates')" class="kid-tab px-6 py-3 font-semibold text-gray-600 hover:text-red-600 border-b-4 border-transparent hover:border-red-200 whitespace-nowrap">🏆 Certificates</button>
+                    <button onclick="showKidTab('games')" class="kid-tab px-6 py-3 font-semibold text-gray-600 hover:text-red-600 border-b-4 border-transparent hover:border-red-200 whitespace-nowrap">🎮 Games</button>
+                    <button onclick="showKidTab('countdown')" class="kid-tab px-6 py-3 font-semibold text-gray-600 hover:text-red-600 border-b-4 border-transparent hover:border-red-200 whitespace-nowrap">⏰ Countdown</button>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="container mx-auto px-4 py-8">
+            <!-- Write Letter Tab -->
+            <div id="writeTab" class="kid-tab-content">
+                <div id="elfSelectionSection">
+                    <h2 class="text-4xl font-bold christmas-font text-center text-red-600 mb-8">Choose Your Elf Pen-Pal! 🎄</h2>
+                    
+                    <!-- Gender Selection -->
+                    <div class="flex justify-center space-x-4 mb-8">
+                        <button onclick="filterElves('all')" class="elf-filter bg-red-600 text-white px-6 py-3 rounded-full font-semibold">All Elves</button>
+                        <button onclick="filterElves('boy')" class="elf-filter bg-blue-500 text-white px-6 py-3 rounded-full font-semibold">Boy Elves 🧝‍♂️</button>
+                        <button onclick="filterElves('girl')" class="elf-filter bg-pink-500 text-white px-6 py-3 rounded-full font-semibold">Girl Elves 🧝‍♀️</button>
+                    </div>
+                    
+                    <!-- Elf Grid -->
+                    <div id="elfGrid" class="grid md:grid-cols-4 sm:grid-cols-2 gap-6 max-w-7xl mx-auto">
+                        <!-- Elves will be populated here -->
+                    </div>
+                </div>
+                
+                <div id="letterWritingSection" class="hidden">
+                    <div class="max-w-4xl mx-auto">
+                        <button onclick="backToElfSelection()" class="mb-4 text-red-600 hover:text-red-700 font-semibold">← Change Elf Friend</button>
+                        
+                        <div class="bg-white rounded-xl shadow-lg p-8">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center space-x-4">
+                                    <div id="selectedElfAvatar" class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-3xl"></div>
+                                    <div>
+                                        <h3 class="text-2xl font-bold text-red-600 christmas-font" id="selectedElfName"></h3>
+                                        <p class="text-sm text-gray-600" id="selectedElfRole"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="letter-paper p-8 rounded-lg mb-6">
+                                <textarea id="letterContent" rows="10" placeholder="Dear elf friend,&#10;&#10;Write your letter here...&#10;&#10;Love," class="w-full border-none focus:outline-none resize-none text-lg" style="background: transparent;"></textarea>
+                            </div>
+                            
+                            <button onclick="sendLetter()" class="w-full bg-gradient-to-r from-red-600 to-green-600 hover:from-red-700 hover:to-green-700 text-white text-xl px-8 py-4 rounded-full font-bold shadow-lg transition transform hover:scale-105">
+                                📮 Send Letter to North Pole! 📮
+                            </button>
+                        </div>
+                        
+                        <!-- Previous Letters -->
+                        <div class="mt-8">
+                            <h3 class="text-2xl font-bold christmas-font text-green-700 mb-4">Previous Letters 💌</h3>
+                            <div id="previousLetters" class="space-y-4">
+                                <!-- Letters will appear here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Videos Tab -->
+            <div id="videosTab" class="kid-tab-content hidden">
+                <h2 class="text-4xl font-bold christmas-font text-center text-red-600 mb-8">Videos from Your Elf! 🎥</h2>
+                <div id="videosContent" class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                    <!-- Videos will be populated here -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                        <div class="bg-gradient-to-br from-red-100 to-green-100 rounded-lg h-64 flex items-center justify-center mb-4">
+                            <span class="text-6xl">🎬</span>
+                        </div>
+                        <h4 class="font-bold text-lg mb-2">Welcome to the North Pole!</h4>
+                        <p class="text-sm text-gray-600 mb-4">Your elf shows you around their workshop</p>
+                        <button class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-semibold">Watch Video</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Certificates Tab -->
+            <div id="certificatesTab" class="kid-tab-content hidden">
+                <h2 class="text-4xl font-bold christmas-font text-center text-red-600 mb-8">My Certificates! 🏆</h2>
+                <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                    <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 border-4 border-yellow-600 rounded-xl p-8 text-center">
+                        <div class="text-6xl mb-4">🌟</div>
+                        <h3 class="text-3xl font-bold christmas-font text-red-600 mb-2">Nice List Certificate</h3>
+                        <p class="text-lg mb-4">Awarded by Santa Claus</p>
+                        <button class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-semibold">Download</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Games Tab -->
+            <div id="gamesTab" class="kid-tab-content hidden">
+                <h2 class="text-4xl font-bold christmas-font text-center text-red-600 mb-8">North Pole Games! 🎮</h2>
+                <div class="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                    <div class="bg-white rounded-xl shadow-lg p-6 card-hover text-center cursor-pointer" onclick="playGame('spot-elf')">
+                        <div class="text-6xl mb-4">🔍</div>
+                        <h4 class="text-xl font-bold text-red-600 mb-2">Spot the Elf</h4>
+                        <p class="text-gray-700">Find the hidden elves!</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-6 card-hover text-center cursor-pointer" onclick="playGame('word-search')">
+                        <div class="text-6xl mb-4">📝</div>
+                        <h4 class="text-xl font-bold text-red-600 mb-2">Word Search</h4>
+                        <p class="text-gray-700">Find Christmas words!</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-6 card-hover text-center cursor-pointer" onclick="playGame('memory')">
+                        <div class="text-6xl mb-4">🎴</div>
+                        <h4 class="text-xl font-bold text-red-600 mb-2">Memory Match</h4>
+                        <p class="text-gray-700">Match the Christmas pairs!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Countdown Tab -->
+            <div id="countdownTab" class="kid-tab-content hidden">
+                <div class="max-w-2xl mx-auto text-center">
+                    <h2 class="text-4xl font-bold christmas-font text-red-600 mb-8">Christmas Countdown! 🎄</h2>
+                    
+                    <div class="bg-white rounded-2xl shadow-2xl p-12 mb-8">
+                        <div id="christmasCountdown" class="text-7xl font-bold text-green-700 mb-4">
+                            <!-- Countdown will be here -->
+                        </div>
+                        <p class="text-2xl text-gray-700">Days Until Christmas!</p>
+                    </div>
+                    
+                    <div class="bg-gradient-to-r from-red-50 to-green-50 rounded-xl p-8">
+                        <h3 class="text-2xl font-bold christmas-font text-red-600 mb-4">Daily Inspiration ✨</h3>
+                        <p id="dailyQuote" class="text-xl text-gray-800 italic">
+                            "The best way to spread Christmas cheer is singing loud for all to hear!"
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Parent Dashboard -->
+    <div id="parentDashboard" class="hidden relative z-10">
+        <!-- Parent Header -->
+        <header class="bg-gradient-to-r from-red-700 to-green-700 text-white shadow-lg sticky top-0 z-50">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-4xl">👪</span>
+                        <div>
+                            <h1 class="text-2xl font-bold christmas-font">Parent Portal</h1>
+                            <p class="text-sm opacity-90" id="parentWelcome">Manage the Magic</p>
+                        </div>
+                    </div>
+                    
+                    <button onclick="logout()" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Parent Navigation -->
+        <nav class="bg-white shadow-md sticky top-20 z-40">
+            <div class="container mx-auto px-4">
+                <div class="flex space-x-2 overflow-x-auto">
+                    <button onclick="showParentTab('subscription')" class="parent-tab px-6 py-3 font-semibold text-red-600 border-b-4 border-red-600 whitespace-nowrap">💳 Subscription</button>
+                    <button onclick="showParentTab('monitor')" class="parent-tab px-6 py-3 font-semibold text-gray-600 hover:text-red-600 border-b-4 border-transparent hover:border-red-200 whitespace-nowrap">👁️ Monitor</button>
+                    <button onclick="showParentTab('settings')" class="parent-tab px-6 py-3 font-semibold text-gray-600 hover:text-red-600 border-b-4 border-transparent hover:border-red-200 whitespace-nowrap">⚙️ Settings</button>
+                    <button onclick="showParentTab('share')" class="parent-tab px-6 py-3 font-semibold text-gray-600 hover:text-red-600 border-b-4 border-transparent hover:border-red-200 whitespace-nowrap">📱 Share Magic</button>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="container mx-auto px-4 py-8">
+            <!-- Subscription Tab -->
+            <div id="subscriptionTab" class="parent-tab-content">
+                <h2 class="text-4xl font-bold christmas-font text-center text-red-600 mb-8">Choose Your Magic Package 🎁</h2>
+                
+                <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-12">
+                    <!-- Monthly Plan -->
+                    <div class="bg-white rounded-2xl shadow-xl p-8 border-4 border-gray-200 card-hover">
+                        <div class="text-center mb-6">
+                            <div class="text-5xl mb-4">📅</div>
+                            <h3 class="text-2xl font-bold text-red-600 mb-2">Monthly Magic</h3>
+                            <div class="text-4xl font-bold text-green-700 mb-2">$14.99<span class="text-lg text-gray-600">/mo</span></div>
+                            <p class="text-gray-600">Cancel anytime</p>
+                        </div>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center"><span class="text-green-600 mr-2">✓</span> Unlimited letters</li>
+                            <li class="flex items-center"><span class="text-green-600 mr-2">✓</span> AI elf responses</li>
+                            <li class="flex items-center"><span class="text-green-600 mr-2">✓</span> Free games</li>
+                            <li class="flex items-center"><span class="text-green-600 mr-2">✓</span> Christmas countdown</li>
+                        </ul>
+                        <button class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-full font-bold transition">Select Plan</button>
+                    </div>
+                    
+                    <!-- Yearly Plan (Popular) -->
+                    <div class="bg-white rounded-2xl shadow-2xl p-8 border-4 border-green-600 card-hover relative">
+                        <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-6 py-1 rounded-full text-sm font-bold">
+                            MOST POPULAR
+                        </div>
+                        <div class="text-center mb-6">
+                            <div class="text-5xl mb-4">🎄</div>
+                            <h3 class="text-2xl font-bold text-red-600 mb-2">Yearly Magic</h3>
+                            <div class="text-4xl font-bold text-green-700 mb-2">$99.99<span class="text-lg text-gray-600">/yr</span></div>
+                            <p class="text-green-600 font-semibold">Save $80!</p>
+                        </div>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center"><span class="text-green-600 mr-2">✓</span> Everything in Monthly</li>
+                            <li class="flex items-center"><span class="text-green-600 mr-2">✓</span> 2 elf videos/month</li>
+                            <li class="flex items-center"><span class="text-green-600 mr-2">✓</span> Nice List certificate</li>
+                            <li class="flex items-center"><span class="text-green-600 mr-2">✓</span> Priority support</li>
+                        </ul>
+                        <button class="w-full bg-gradient-to-r from-red-600 to-green-600 hover:from-red-700 hover:to-green-700 text-white py-3 rounded-full font-bold transition pulse-glow">Select Plan</button>
+                    </div>
+                    
+                    <!-- Lifetime Plan -->
+                    <div class="bg-white rounded-2xl shadow-xl p-8 border-4 border-yellow-500 card-hover">
+                        <div class="text-center mb-6">
+                            <div class="text-5xl mb-4">👑</div>
+                            <h3 class="text-2xl font-bold text-red-600 mb-2">Forever Magic</h3>
+                            <div class="text-4xl font-bold text-green-700 mb-2">$299<span class="text-lg text-gray-600"> once</span></div>
+                            <p class="text-gray-600">Lifetime access</p>
+                        </div>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center"><span class="text-green-600 mr-2">✓</span> Everything in Yearly</li>
+                            <li class="flex items-center"><span class="text-green-600 mr-2">✓</span> Unlimited videos</li>
+                            <li class="flex items-center"><span class="text-green-600 mr-2">✓</span> All certificates</li>
+                            <li class="flex items-center"><span class="text-green-600 mr-2">✓</span> Premium elf selection</li>
+                            <li class="flex items-center"><span class="text-green-600 mr-2">✓</span> Future features FREE</li>
+                        </ul>
+                        <button class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-full font-bold transition">Select Plan</button>
+                    </div>
+                </div>
+                
+                <!-- Add-ons -->
+                <div class="max-w-4xl mx-auto">
+                    <h3 class="text-3xl font-bold christmas-font text-center text-green-700 mb-6">Magical Add-ons ✨</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-xl shadow-lg p-6 flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <span class="text-4xl">🏆</span>
+                                <div>
+                                    <h4 class="font-bold text-lg">Nice List Certificate</h4>
+                                    <p class="text-sm text-gray-600">Official certificate from Santa</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-2xl font-bold text-green-700">$9.99</p>
+                                <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded-full text-sm font-semibold mt-2">Add</button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl shadow-lg p-6 flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <span class="text-4xl">🤝</span>
+                                <div>
+                                    <h4 class="font-bold text-lg">Friendship Certificate</h4>
+                                    <p class="text-sm text-gray-600">Special bond certificate</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-2xl font-bold text-green-700">$7.99</p>
+                                <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded-full text-sm font-semibold mt-2">Add</button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl shadow-lg p-6 flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <span class="text-4xl">🎥</span>
+                                <div>
+                                    <h4 class="font-bold text-lg">Extra Video Bundle</h4>
+                                    <p class="text-sm text-gray-600">5 additional elf videos</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-2xl font-bold text-green-700">$19.99</p>
+                                <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded-full text-sm font-semibold mt-2">Add</button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl shadow-lg p-6 flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <span class="text-4xl">🎁</span>
+                                <div>
+                                    <h4 class="font-bold text-lg">Physical Letter Package</h4>
+                                    <p class="text-sm text-gray-600">Real letter mailed to you</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-2xl font-bold text-green-700">$24.99</p>
+                                <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded-full text-sm font-semibold mt-2">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Kid Login Info -->
+                <div class="max-w-2xl mx-auto mt-12 bg-blue-50 border-2 border-blue-200 rounded-xl p-8">
+                    <h3 class="text-2xl font-bold text-blue-800 mb-4">🎉 Your Child's Login Info</h3>
+                    <div class="bg-white rounded-lg p-6 space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-gray-700">Username:</span>
+                            <span class="text-lg font-mono bg-gray-100 px-4 py-2 rounded">little_helper_123</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-gray-700">Password:</span>
+                            <span class="text-lg font-mono bg-gray-100 px-4 py-2 rounded">ChristmasMagic2024</span>
+                        </div>
+                        <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold mt-4">📧 Email Me These Details</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Monitor Tab -->
+            <div id="monitorTab" class="parent-tab-content hidden">
+                <h2 class="text-4xl font-bold christmas-font text-center text-red-600 mb-8">Message Monitoring 👁️</h2>
+                
+                <div class="max-w-4xl mx-auto">
+                    <!-- Response Mode Toggle -->
+                    <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+                        <h3 class="text-2xl font-bold text-green-700 mb-4">Response Mode</h3>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="font-semibold text-gray-800">Who responds to your child?</p>
+                                <p class="text-sm text-gray-600">Toggle between AI elf responses and writing your own</p>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <span class="font-semibold" id="responseMode">AI Elf</span>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" id="responseModeToggle">
+                                    <div class="w-14 h-7 bg-green-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-blue-600"></div>
+                                </label>
+                                <span class="font-semibold text-gray-400">Parent</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Message History -->
+                    <div class="bg-white rounded-xl shadow-lg p-8">
+                        <h3 class="text-2xl font-bold text-green-700 mb-6">Message History</h3>
+                        <div class="space-y-4">
+                            <div class="border-l-4 border-green-600 bg-green-50 p-4 rounded-r-lg">
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="font-bold text-green-700">From: Emma (Your Child)</span>
+                                    <span class="text-sm text-gray-600">Dec 15, 2024</span>
+                                </div>
+                                <p class="text-gray-800">Dear Jingles, I made a snowman today! His name is Frosty. Do you like building snowmen at the North Pole?</p>
+                            </div>
+                            
+                            <div class="border-l-4 border-red-600 bg-red-50 p-4 rounded-r-lg">
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="font-bold text-red-700">From: Jingles the Elf 🧝‍♂️</span>
+                                    <span class="text-sm text-gray-600">Dec 15, 2024</span>
+                                </div>
+                                <p class="text-gray-800">Hi Emma! Oh wow, I LOVE building snowmen! At the North Pole, we have so much snow we can build them every day! Frosty is a great name. We should build matching snowmen sometime! ⛄</p>
+                                <div class="mt-2 text-xs text-gray-600 italic">✨ AI Generated Response</div>
+                            </div>
+                            
+                            <div class="border-l-4 border-green-600 bg-green-50 p-4 rounded-r-lg">
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="font-bold text-green-700">From: Emma (Your Child)</span>
+                                    <span class="text-sm text-gray-600">Dec 14, 2024</span>
+                                </div>
+                                <p class="text-gray-800">Dear Jingles, What is your favorite cookie? Mine is chocolate chip!</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Pending Response (if parent mode) -->
+                        <div class="mt-8 bg-yellow-50 border-2 border-yellow-300 rounded-lg p-6 hidden" id="pendingResponse">
+                            <h4 class="font-bold text-yellow-800 mb-4">⏳ Waiting for Your Response</h4>
+                            <div class="bg-white rounded-lg p-4 mb-4">
+                                <p class="text-gray-800 italic">"Dear Jingles, I helped mommy bake cookies today! What do you do to help at the North Pole?"</p>
+                            </div>
+                            <textarea rows="4" placeholder="Write your response as the elf..." class="w-full border-2 border-gray-300 rounded-lg p-3 focus:border-red-500 focus:outline-none mb-4"></textarea>
+                            <button class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-semibold">Send Elf Response</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings Tab -->
+            <div id="settingsTab" class="parent-tab-content hidden">
+                <h2 class="text-4xl font-bold christmas-font text-center text-red-600 mb-8">Settings ⚙️</h2>
+                
+                <div class="max-w-2xl mx-auto space-y-6">
+                    <div class="bg-white rounded-xl shadow-lg p-8">
+                        <h3 class="text-xl font-bold text-green-700 mb-4">Child Information</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Child's Name</label>
+                                <input type="text" value="Emma" class="w-full border-2 border-gray-300 rounded-lg p-3 focus:border-red-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Age</label>
+                                <input type="number" value="7" class="w-full border-2 border-gray-300 rounded-lg p-3 focus:border-red-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Selected Elf</label>
+                                <input type="text" value="Jingles" readonly class="w-full border-2 border-gray-200 rounded-lg p-3 bg-gray-50">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-8">
+                        <h3 class="text-xl font-bold text-green-700 mb-4">Parent Information</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                                <input type="email" value="parent@example.com" class="w-full border-2 border-gray-300 rounded-lg p-3 focus:border-red-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Phone (optional)</label>
+                                <input type="tel" class="w-full border-2 border-gray-300 rounded-lg p-3 focus:border-red-500 focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-8">
+                        <h3 class="text-xl font-bold text-green-700 mb-4">Notification Preferences</h3>
+                        <div class="space-y-3">
+                            <label class="flex items-center space-x-3">
+                                <input type="checkbox" checked class="w-5 h-5 text-red-600">
+                                <span>Email me when my child sends a letter</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="checkbox" checked class="w-5 h-5 text-red-600">
+                                <span>Weekly activity summary</span>
+                            </label>
+                            <label class="flex items-center space-x-3">
+                                <input type="checkbox" class="w-5 h-5 text-red-600">
+                                <span>Special offers and updates</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-full font-bold text-lg">Save Settings</button>
+                </div>
+            </div>
+            
+            <!-- Share Magic Tab -->
+            <div id="shareTab" class="parent-tab-content hidden">
+                <h2 class="text-4xl font-bold christmas-font text-center text-red-600 mb-8">Share the Magic! 📱</h2>
+                
+                <div class="max-w-2xl mx-auto">
+                    <div class="bg-white rounded-xl shadow-lg p-8 text-center mb-8">
+                        <div class="text-6xl mb-4">✨</div>
+                        <h3 class="text-2xl font-bold text-green-700 mb-4">Spread Christmas Joy!</h3>
+                        <p class="text-gray-700 mb-6">Share your child's magical elf pen-pal experience with friends and family!</p>
+                        
+                        <div class="flex justify-center space-x-4 mb-6">
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-semibold flex items-center space-x-2">
+                                <span>📘</span>
+                                <span>Facebook</span>
+                            </button>
+                            <button class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-full font-semibold flex items-center space-x-2">
+                                <span>📸</span>
+                                <span>Instagram</span>
+                            </button>
+                            <button class="bg-blue-400 hover:bg-blue-500 text-white px-6 py-3 rounded-full font-semibold flex items-center space-x-2">
+                                <span>🐦</span>
+                                <span>Twitter</span>
+                            </button>
+                        </div>
+                        
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <p class="text-sm text-gray-600 mb-2">Share this link:</p>
+                            <div class="flex items-center space-x-2">
+                                <input type="text" value="https://elfpenpal.com/ref/ABC123" readonly class="flex-1 border-2 border-gray-300 rounded-lg p-2 text-sm">
+                                <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold text-sm">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Referral Program -->
+                    <div class="bg-gradient-to-r from-yellow-50 to-yellow-100 border-2 border-yellow-400 rounded-xl p-8 text-center">
+                        <h3 class="text-2xl font-bold text-yellow-800 mb-4">🎁 Referral Rewards!</h3>
+                        <p class="text-gray-800 mb-4">Invite friends and earn rewards!</p>
+                        <div class="grid grid-cols-3 gap-4 mb-6">
+                            <div class="bg-white rounded-lg p-4">
+                                <div class="text-3xl font-bold text-green-700">3</div>
+                                <div class="text-sm text-gray-600">Referrals</div>
+                            </div>
+                            <div class="bg-white rounded-lg p-4">
+                                <div class="text-3xl font-bold text-blue-700">$45</div>
+                                <div class="text-sm text-gray-600">Earned</div>
+                            </div>
+                            <div class="bg-white rounded-lg p-4">
+                                <div class="text-3xl font-bold text-red-700">🏆</div>
+                                <div class="text-sm text-gray-600">Bronze</div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-700">Refer 2 more friends to unlock Silver tier and get a free certificate bundle!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Snow effect
+        function createSnowflakes() {
+            const snow = document.getElementById('snow');
+            const snowflakeCount = 50;
+            
+            for (let i = 0; i < snowflakeCount; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.classList.add('snowflake');
+                snowflake.innerHTML = '❄';
+                snowflake.style.left = Math.random() * 100 + '%';
+                snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                snowflake.style.animationDelay = Math.random() * 5 + 's';
+                snowflake.style.fontSize = (Math.random() * 0.5 + 0.5) + 'em';
+                snow.appendChild(snowflake);
+            }
+        }
+        
+        createSnowflakes();
+        
+        // Elf data
+        const elves = [
+            // Boy Elves
+            { id: 1, name: 'Jingles', gender: 'boy', emoji: '🧝‍♂️', role: 'Toy Workshop Manager', personality: 'Cheerful and loves building wooden toys. Always has paint on his hands!', likes: 'Woodworking, hot cocoa, jingle bells' },
+            { id: 2, name: 'Sparkle', gender: 'boy', emoji: '✨', role: 'Gift Wrapper Expert', personality: 'Detail-oriented and creative. Makes the most beautiful bows!', likes: 'Ribbons, glitter, making things pretty' },
+            { id: 3, name: 'Buddy', gender: 'boy', emoji: '🎅', role: 'Cookie Taste Tester', personality: 'Friendly and always hungry. Loves trying new cookie recipes!', likes: 'Cookies, milk, Mrs. Claus\'s kitchen' },
+            { id: 4, name: 'Tinsel', gender: 'boy', emoji: '🎄', role: 'Tree Decorator', personality: 'Artistic and loves all things shiny. Expert at untangling lights!', likes: 'Ornaments, lights, decorating' },
+            { id: 5, name: 'Dash', gender: 'boy', emoji: '🦌', role: 'Reindeer Caretaker', personality: 'Energetic and loves animals. Best friends with all the reindeer!', likes: 'Running, carrots, playing with Rudolph' },
+            { id: 6, name: 'Frosty', gender: 'boy', emoji: '⛄', role: 'Snow Sculptor', personality: 'Cool and creative. Makes amazing ice sculptures!', likes: 'Snowball fights, ice skating, winter' },
+            { id: 7, name: 'Merry', gender: 'boy', emoji: '🎵', role: 'Carol Singer', personality: 'Musical and jolly. Always humming Christmas tunes!', likes: 'Singing, bells, spreading cheer' },
+            { id: 8, name: 'Jolly', gender: 'boy', emoji: '😊', role: 'Happiness Officer', personality: 'Super positive and loves making others smile!', likes: 'Jokes, laughter, happy faces' },
+            { id: 9, name: 'Zippy', gender: 'boy', emoji: '⚡', role: 'Mail Sorter', personality: 'Fast and organized. Reads letters to Santa super quickly!', likes: 'Speed, efficiency, letters from kids' },
+            { id: 10, name: 'Chester', gender: 'boy', emoji: '📚', role: 'Story Keeper', personality: 'Wise and loves reading. Knows all the Christmas stories!', likes: 'Books, stories, quiet time' },
+            
+            // Girl Elves
+            { id: 11, name: 'Snowflake', gender: 'girl', emoji: '❄️', role: 'Winter Magic Specialist', personality: 'Gentle and magical. Can make snowflakes dance in the air!', likes: 'Winter, magic, dancing snowflakes' },
+            { id: 12, name: 'Twinkle', gender: 'girl', emoji: '⭐', role: 'Star Lighter', personality: 'Bright and sparkly. Lights up the North Pole every night!', likes: 'Stars, lights, night sky' },
+            { id: 13, name: 'Cookie', gender: 'girl', emoji: '🍪', role: 'Baker\'s Assistant', personality: 'Sweet and loves baking. Makes the best gingerbread!', likes: 'Baking, decorating cookies, frosting' },
+            { id: 14, name: 'Holly', gender: 'girl', emoji: '🌿', role: 'Wreath Maker', personality: 'Nature-loving and crafty. Creates beautiful wreaths!', likes: 'Plants, crafts, decorations' },
+            { id: 15, name: 'Joy', gender: 'girl', emoji: '💝', role: 'Gift Selector', personality: 'Thoughtful and kind. Knows exactly what everyone wants!', likes: 'Helping, gifts, making wishes come true' },
+            { id: 16, name: 'Belle', gender: 'girl', emoji: '🔔', role: 'Bell Ringer', personality: 'Musical and elegant. Plays the most beautiful bell melodies!', likes: 'Music, bells, performances' },
+            { id: 17, name: 'Candy', gender: 'girl', emoji: '🍬', role: 'Candy Cane Maker', personality: 'Sweet and energetic. Loves all things peppermint!', likes: 'Candy, sweets, peppermint' },
+            { id: 18, name: 'Star', gender: 'girl', emoji: '🌟', role: 'Wish Granter', personality: 'Magical and hopeful. Helps make Christmas wishes come true!', likes: 'Dreams, wishes, magic' },
+            { id: 19, name: 'Ribbon', gender: 'girl', emoji: '🎀', role: 'Fashion Designer', personality: 'Stylish and creative. Designs all the elves\' outfits!', likes: 'Fashion, sewing, pretty things' },
+            { id: 20, name: 'Crystal', gender: 'girl', emoji: '💎', role: 'Ice Palace Keeper', personality: 'Elegant and organized. Keeps the North Pole sparkling!', likes: 'Cleanliness, ice sculptures, beauty' }
+        ];
+        
+        // State
+        let currentUser = null;
+        let selectedElf = null;
+        let currentFilter = 'all';
+        
+        // Christmas quotes
+        const quotes = [
+            "The best way to spread Christmas cheer is singing loud for all to hear!",
+            "Christmas waves a magic wand over this world, and behold, everything is softer and more beautiful.",
+            "Christmas isn't a season. It's a feeling.",
+            "Believe in the magic of Christmas!",
+            "The joy of brightening other lives becomes for us the magic of the holidays.",
+            "Christmas is not as much about opening our presents as opening our hearts.",
+            "May your days be merry and bright!",
+            "At Christmas, all roads lead home.",
+            "Peace on earth will come to all if we just follow the light.",
+            "Christmas is doing a little something extra for someone."
+        ];
+        
+        // Initialize
+        function init() {
+            updateChristmasCountdown();
+            setInterval(updateChristmasCountdown, 1000 * 60 * 60); // Update every hour
+            displayRandomQuote();
+            displayElves();
+        }
+        
+        // Auth Modal
+        function showAuthModal(userType, action) {
+            const modal = document.getElementById('authModal');
+            const content = document.getElementById('authContent');
+            
+            const isParent = userType === 'parent';
+            const isLogin = action === 'login';
+            
+            content.innerHTML = `
+                <div class="text-center mb-6">
+                    <div class="text-6xl mb-4">${isParent ? '👨‍👩‍👧‍👦' : '🧒'}</div>
+                    <h2 class="text-3xl font-bold christmas-font text-red-600">
+                        ${isParent ? 'Parent' : 'Kid'} ${isLogin ? 'Login' : 'Register'}
+                    </h2>
+                </div>
+                
+                <form onsubmit="handleAuth(event, '${userType}', '${action}')" class="space-y-4">
+                    ${!isLogin ? `
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                ${isParent ? 'Your Name' : 'Child\'s Name'}
+                            </label>
+                            <input type="text" required class="w-full border-2 border-gray-300 rounded-lg p-3 focus:border-red-500 focus:outline-none">
+                        </div>
+                    ` : ''}
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            ${isParent ? 'Email' : 'Username'}
+                        </label>
+                        <input type="${isParent ? 'email' : 'text'}" required class="w-full border-2 border-gray-300 rounded-lg p-3 focus:border-red-500 focus:outline-none">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                        <input type="password" required class="w-full border-2 border-gray-300 rounded-lg p-3 focus:border-red-500 focus:outline-none">
+                    </div>
+                    
+                    ${!isLogin && isParent ? `
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Phone (optional)</label>
+                            <input type="tel" class="w-full border-2 border-gray-300 rounded-lg p-3 focus:border-red-500 focus:outline-none">
+                        </div>
+                    ` : ''}
+                    
+                    <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-green-600 hover:from-red-700 hover:to-green-700 text-white text-lg px-6 py-3 rounded-full font-bold transition">
+                        ${isLogin ? 'Login' : 'Create Account'} 🎄
+                    </button>
+                </form>
+                
+                <p class="text-center text-sm text-gray-600 mt-4">
+                    ${isLogin ? "Don't have an account?" : "Already have an account?"}
+                    <button onclick="showAuthModal('${userType}', '${isLogin ? 'register' : 'login'}')" class="text-red-600 font-semibold hover:underline">
+                        ${isLogin ? 'Register' : 'Login'}
+                    </button>
+                </p>
+            `;
+            
+            modal.classList.remove('hidden');
+        }
+        
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.add('hidden');
+        }
+        
+        function handleAuth(event, userType, action) {
+            event.preventDefault();
+            
+            // Simulate authentication
+            currentUser = {
+                type: userType,
+                name: userType === 'parent' ? 'Parent' : 'Emma',
+                email: 'user@example.com'
+            };
+            
+            closeAuthModal();
+            
+            if (userType === 'parent') {
+                showParentDashboard();
+            } else {
+                showKidDashboard();
+            }
+        }
+        
+        function logout() {
+            currentUser = null;
+            selectedElf = null;
+            document.getElementById('landingPage').classList.remove('hidden');
+            document.getElementById('kidDashboard').classList.add('hidden');
+            document.getElementById('parentDashboard').classList.add('hidden');
+        }
+        
+        // Kid Dashboard
+        function showKidDashboard() {
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('kidDashboard').classList.remove('hidden');
+            document.getElementById('kidWelcome').textContent = `Welcome back, ${currentUser.name}! 🎄`;
+        }
+        
+        function showKidTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.kid-tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.querySelectorAll('.kid-tab').forEach(btn => {
+                btn.classList.remove('text-red-600', 'border-red-600');
+                btn.classList.add('text-gray-600', 'border-transparent');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.remove('hidden');
+            event.target.classList.remove('text-gray-600', 'border-transparent');
+            event.target.classList.add('text-red-600', 'border-red-600');
+        }
+        
+        // Parent Dashboard
+        function showParentDashboard() {
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('parentDashboard').classList.remove('hidden');
+            document.getElementById('parentWelcome').textContent = `Welcome, ${currentUser.name}!`;
+        }
+        
+        function showParentTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.parent-tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.querySelectorAll('.parent-tab').forEach(btn => {
+                btn.classList.remove('text-red-600', 'border-red-600');
+                btn.classList.add('text-gray-600', 'border-transparent');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.remove('hidden');
+            event.target.classList.remove('text-gray-600', 'border-transparent');
+            event.target.classList.add('text-red-600', 'border-red-600');
+        }
+        
+        // Elf Selection
+        function displayElves() {
+            const grid = document.getElementById('elfGrid');
+            const filteredElves = currentFilter === 'all' ? elves : elves.filter(e => e.gender === currentFilter);
+            
+            grid.innerHTML = filteredElves.map(elf => `
+                <div class="elf-card card-hover" onclick="selectElf(${elf.id})">
+                    <div class="bg-gradient-to-br ${elf.gender === 'boy' ? 'from-blue-100 to-blue-200' : 'from-pink-100 to-pink-200'} p-6 text-center">
+                        <div class="text-6xl mb-2">${elf.emoji}</div>
+                        <h3 class="text-xl font-bold text-red-600 christmas-font">${elf.name}</h3>
+                        <p class="text-sm text-gray-600">${elf.role}</p>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm text-gray-700 mb-2"><strong>Personality:</strong> ${elf.personality}</p>
+                        <p class="text-sm text-gray-700"><strong>Likes:</strong> ${elf.likes}</p>
+                    </div>
+                    <div class="p-4 pt-0">
+                        <button class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-full font-semibold transition">
+                            Choose ${elf.name}!
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function filterElves(filter) {
+            currentFilter = filter;
+            displayElves();
+            
+            // Update button styles
+            document.querySelectorAll('.elf-filter').forEach(btn => {
+                btn.classList.remove('bg-red-600', 'bg-blue-500', 'bg-pink-500');
+                btn.classList.add('bg-gray-300', 'text-gray-700');
+            });
+            event.target.classList.remove('bg-gray-300', 'text-gray-700');
+            if (filter === 'all') event.target.classList.add('bg-red-600', 'text-white');
+            else if (filter === 'boy') event.target.classList.add('bg-blue-500', 'text-white');
+            else event.target.classList.add('bg-pink-500', 'text-white');
+        }
+        
+        function selectElf(elfId) {
+            selectedElf = elves.find(e => e.id === elfId);
+            document.getElementById('elfSelectionSection').classList.add('hidden');
+            document.getElementById('letterWritingSection').classList.remove('hidden');
+            
+            document.getElementById('selectedElfAvatar').textContent = selectedElf.emoji;
+            document.getElementById('selectedElfName').textContent = selectedElf.name;
+            document.getElementById('selectedElfRole').textContent = selectedElf.role;
+        }
+        
+        function backToElfSelection() {
+            document.getElementById('elfSelectionSection').classList.remove('hidden');
+            document.getElementById('letterWritingSection').classList.add('hidden');
+        }
+        
+        function sendLetter() {
+            const content = document.getElementById('letterContent').value;
+            if (!content.trim()) {
+                alert('Please write something in your letter! 💌');
+                return;
+            }
+            
+            // Simulate sending
+            alert(`🎄 Your letter has been sent to ${selectedElf.name} at the North Pole! Check back soon for a reply! ✨`);
+            
+            // Add to previous letters
+            const container = document.getElementById('previousLetters');
+            const letterDiv = document.createElement('div');
+            letterDiv.className = 'bg-white rounded-lg shadow-md p-4';
+            letterDiv.innerHTML = `
+                <div class="flex justify-between items-start mb-2">
+                    <span class="font-bold text-green-700">To: ${selectedElf.name}</span>
+                    <span class="text-sm text-gray-600">${new Date().toLocaleDateString()}</span>
+                </div>
+                <p class="text-gray-800 whitespace-pre-line">${content}</p>
+                <div class="mt-3 text-sm text-yellow-600 italic">✉️ Awaiting reply from the North Pole...</div>
+            `;
+            container.insertBefore(letterDiv, container.firstChild);
+            
+            document.getElementById('letterContent').value = '';
+        }
+        
+        // Games
+        function playGame(gameType) {
+            alert(`🎮 ${gameType === 'spot-elf' ? 'Spot the Elf' : gameType === 'word-search' ? 'Word Search' : 'Memory Match'} game coming soon! Get ready for North Pole fun! 🎄`);
+        }
+        
+        // Christmas Countdown
+        function updateChristmasCountdown() {
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const christmas = new Date(currentYear, 11, 25); // December 25
+            
+            if (now > christmas) {
+                christmas.setFullYear(currentYear + 1);
+            }
+            
+            const diff = christmas - now;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            
+            const countdownEl = document.getElementById('christmasCountdown');
+            if (countdownEl) {
+                countdownEl.textContent = days;
+            }
+        }
+        
+        function displayRandomQuote() {
+            const quoteEl = document.getElementById('dailyQuote');
+            if (quoteEl) {
+                const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+                quoteEl.textContent = `"${randomQuote}"`;
+            }
+        }
+        
+        // Response mode toggle
+        document.getElementById('responseModeToggle')?.addEventListener('change', function() {
+            const mode = this.checked ? 'Parent' : 'AI Elf';
+            document.getElementById('responseMode').textContent = mode;
+            document.getElementById('pendingResponse').classList.toggle('hidden', !this.checked);
+        });
+        
+        // Guest letter function
+        function sendGuestLetter() {
+            const name = document.getElementById('guestName').value;
+            const letter = document.getElementById('guestLetter').value;
+            
+            if (!name.trim()) {
+                alert('🎅 Please enter your name so Santa knows who wrote this letter!');
+                document.getElementById('guestName').focus();
+                return;
+            }
+            
+            if (!letter.trim()) {
+                alert('✉️ Please write a letter to Santa and the elves!');
+                document.getElementById('guestLetter').focus();
+                return;
+            }
+            
+            // Show success message
+            alert(`🎄 Thank you ${name}! Your letter has been sent to the North Pole!\n\n📬 Santa and the elves will read it right away!\n\n✨ Want them to write back? Ask your parents to create an account!`);
+            
+            // Clear the form
+            document.getElementById('guestName').value = '';
+            document.getElementById('guestLetter').value = '';
+            
+            // Optional: Show confetti or animation
+            console.log('Letter sent from:', name);
+            console.log('Letter content:', letter);
+        }
+        
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
